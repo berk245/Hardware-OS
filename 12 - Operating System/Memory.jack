@@ -36,36 +36,36 @@ class Memory {
     /** Finds an available RAM block of the given size and returns
      *  a reference to its base address. */
     function Array alloc(int size){
-		var Array current, selected, block;
-		var int currentSize, selectedSize;
+		var Array freeBase, selectedFreeBlock, allocatedBlock;
+		var int currentFreeSize, heapBoundary;
 		
 		if(size < 0){
 			do Sys.error(5);
 		}
 		
-		let current = HEAP;
-		let selected = -1;
-		let selectedSize = HEAP[1] + 1;  // Strictly greater than max
-		let currentSize = current[1];
-		while(current > -1){
-			if(~(currentSize < (size + 2))){
-				if(currentSize < selectedSize){
-					let selected = current;
-					let selectedSize = currentSize;
+		let freeBase = HEAP;
+		let selectedFreeBlock = -1;
+		let heapBoundary = HEAP[1] + 1; 
+		let currentFreeSize = freeBase[1];
+		while(freeBase > -1){
+			if(~(currentFreeSize < (size + 2))){
+				if(currentFreeSize < heapBoundary){
+					let selectedFreeBlock = freeBase;
+					let heapBoundary = currentFreeSize;
 				}
 			}
-			let current = current[0];
-			let currentSize = current[1];
+			let freeBase = freeBase[0];
+			let currentFreeSize = freeBase[1];
 		}
-		if(selected = -1){
+		if(selectedFreeBlock = -1){
 			do Sys.error(6);
 		}
 		
-		let selected[1] = selected[1] - size -2;
-		let block = selected + selected[1] + 1;
-		let block[0] = -1;
-		let block[1] = size;
-		return block + 2;
+		let selectedFreeBlock[1] = selectedFreeBlock[1] - size -2;
+		let allocatedBlock = selectedFreeBlock + selectedFreeBlock[1] + 1;
+		let allocatedBlock[0] = -1;
+		let allocatedBlock[1] = size;
+		return allocatedBlock + 2;
 	}
 	
 	function void deAlloc(Array array){
