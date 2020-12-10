@@ -1,0 +1,10 @@
+CHIP zeroCheck16 {
+    IN a[16];
+    OUT out;
+
+    PARTS:
+   // Put you code here:
+    Or8Way(in=a[0..7], out=half1);
+    Or8Way(in=a[8..15], out=half2);
+    Or(a=half1, b=half2, out=out);
+}
